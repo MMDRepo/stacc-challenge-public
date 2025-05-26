@@ -60,7 +60,7 @@ public class DataInitializer implements CommandLineRunner {
         user.setFirstName("Demo");
         user.setLastName("User");
         user.setEmail("demo@payforjoy.com");
-        user.setPhone("+47 123 45 678");
+        user.setPhone("+4712345678");
         user.setDateOfBirth(LocalDate.of(1990, 5, 15));
 
         User savedUser = userRepository.save(user);
