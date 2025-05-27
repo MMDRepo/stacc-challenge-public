@@ -68,3 +68,5 @@ PayForJoy is a budgeting application built using **Java**, **Spring Boot**, **Ma
   ```properties
   spring.h2.console.enabled=true
   spring.h2.console.path=/h2-console
+  
+
