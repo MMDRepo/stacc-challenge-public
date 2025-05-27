@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -29,6 +32,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
         return convertToDto(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDto> findAll() {
+        logger.info("Fetching all users");
+        return userRepository.findAll()
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -69,6 +82,7 @@ public class UserServiceImpl implements UserService {
         User updatedUser = userRepository.save(user);
         return convertToDto(updatedUser);
     }
+
 
     @Override
     public void deleteUser(Long id) {

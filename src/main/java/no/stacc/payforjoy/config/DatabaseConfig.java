@@ -1,7 +1,5 @@
 package no.stacc.payforjoy.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -17,19 +15,19 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 @Slf4j
 public class DatabaseConfig {
 
-    @Bean
+   @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
-        log.info("Configuring primary data source for PayForJoy");
-        //return DataSourceBuilder.create().build();
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/payforjoy?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true");
-        config.setUsername("root");
-        config.setPassword("root");
-        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-
-        return new HikariDataSource(config);
+        log.info("Configuring H2 in-memory data source for PayForJoy");
+        return DataSourceBuilder.create()
+                .url("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE")
+                .username("sa")
+                .password("password")
+                .driverClassName("org.h2.Driver")
+                .build();
     }
+
+
 
     @Bean
     @ConditionalOnProperty(
@@ -52,4 +50,3 @@ public class DatabaseConfig {
         }
     }
 }
-

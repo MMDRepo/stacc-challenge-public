@@ -1,0 +1,211 @@
+
+curl -X POST http://localhost:8081/api/v1/users \
+-H "Content-Type: application/json" \
+-d '{
+  "firstName": "Joddhn",
+  "lastName": "Dodde",
+  "email": "john.dccoe@example.com",
+  "password": "securepassword",
+  "phoneNumber": "1234567890"
+}'
+
+# getAllUsers
+curl -X GET "http://localhost:8081/api/v1/users"
+
+# getUser with id 1
+curl -X GET "http://localhost:8081/api/v1/users/1"
+
+# getUserAccounts for user 1
+curl -X GET "http://localhost:8081/api/v1/accounts/user/1"
+
+# createTransaction
+curl -X POST "http://localhost:8081/api/v1/transactions" \
+-H "Content-Type: application/json" \
+-d '{
+  "userId": 1,
+  "accountId": 1,
+  "amount": 100.00,
+  "transactionType": "EXPENSE",
+  "description": "Grocery Shopping",
+  "currency": "NOK",
+  "transactionDate": "2025-05-26T10:30:00"
+}'
+
+curl -X POST "http://localhost:8081/api/v1/transactions" \
+-H "Content-Type: application/json" \
+-d '{
+  "userId": 1,
+  "accountId": 1,
+  "amount": 500.00,
+  "transactionType": "SAVINGS",
+  "description": "Grocery Shopping",
+  "currency": "NOK",
+  "transactionDate": "2025-05-26T10:30:00"
+}'
+
+curl -X POST "http://localhost:8081/api/v1/transactions" \
+-H "Content-Type: application/json" \
+-d '{
+  "userId": 1,
+  "accountId": 1,
+  "amount": 1500.00,
+  "transactionType": "SAVINGS",
+  "description": "Grocery Shopping",
+  "currency": "NOK",
+  "transactionDate": "2025-05-26T10:30:00"
+}'
+
+curl -X POST "http://localhost:8081/api/v1/transactions" \
+-H "Content-Type: application/json" \
+-d '{
+  "userId": 1,
+  "accountId": 1,
+  "amount": 21500.00,
+  "transactionType": "INCOME",
+  "description": "Grocery Shopping",
+  "currency": "NOK",
+  "transactionDate": "2025-05-26T10:30:00"
+}'
+
+# getUserTransactions
+curl -X GET "http://localhost:8081/api/v1/transactions/user/1"
+
+# getActiveGoals
+curl -X GET "http://localhost:8081/api/v1/goals/user/1/active"
+
+# getSavingsAnalytics
+curl -X GET "http://localhost:8081/api/v1/dashboard/user/1/savings-analytics"
+
+# getSpendingAnalytics
+curl -X GET "http://localhost:8081/api/v1/dashboard/user/1/spending-analytics"
+
+# getFinancialOverview
+curl -X GET "http://localhost:8081/api/v1/dashboard/user/1/financial-overview"
+
+
+# getTotalPoints
+curl -X GET "http://localhost:8081/api/v1/rewards/user/1/points"
+
+# getMonthlyTrends
+curl -X GET "http://localhost:8081/api/v1/dashboard/user/1/trends"
+
+# getUnclaimedRewards
+curl -X GET "http://localhost:8081/api/v1/rewards/user/1/unclaimed"
+
+# getDashboardData
+curl -X GET "http://localhost:8081/api/v1/dashboard/user/1"
+#gives some null values
+
+# getRecentTransactions will list the last 5 (hardcoded as of now) transactions
+curl -X GET "http://localhost:8081/api/v1/transactions/user/1/recent"
+
+# getTotalBalance
+curl -X GET "http://localhost:8081/api/v1/accounts/user/1/total-balance"
+
+# getUserGoals
+curl -X GET "http://localhost:8081/api/v1/goals/user/1"
+
+# getUser
+curl -X GET "http://localhost:8081/api/v1/users/1"
+
+# getDashboardDataForPeriod
+curl -X GET "http://localhost:8081/api/v1/dashboard/user/1/period?startDate=2025-05-01T00:00:00&endDate=2025-05-31T23:59:59"
+
+# getUserByEmail
+curl -X GET "http://localhost:8081/api/v1/users/email/demo@payforjoy.com"
+
+# getAccount
+curl -X GET "http://localhost:8081/api/v1/accounts/1"
+
+# refreshDashboardData
+curl -X POST "http://localhost:8081/api/v1/dashboard/user/1/refresh"
+
+——————
+
+# checkMilestoneRewards
+curl -X GET "http://localhost:8081/api/v1/rewards/user/1/check-milestones"
+#empty response
+
+
+
+
+
+
+# updateAccount
+curl -X PUT "http://localhost:8081/api/v1/accounts/{id}" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+# checkEmailExists
+curl -X GET "http://localhost:8081/api/v1/users/exists/email/{email}"
+
+
+# deleteUser
+curl -X DELETE "http://localhost:8081/api/v1/users/{id}"
+
+# getReward
+curl -X GET "http://localhost:8081/api/v1/rewards/{id}"
+
+
+
+# deleteAccount
+curl -X DELETE "http://localhost:8081/api/v1/accounts/{id}"
+
+
+
+# getGoal
+curl -X GET "http://localhost:8081/api/v1/goals/{id}"
+
+
+
+# updateTransaction
+curl -X PUT "http://localhost:8081/api/v1/transactions/{id}" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+
+# deleteTransaction
+curl -X DELETE "http://localhost:8081/api/v1/transactions/{id}"
+
+# claimReward
+curl -X POST "http://localhost:8081/api/v1/rewards/{id}/claim"
+
+# addSavings
+curl -X POST "http://localhost:8081/api/v1/goals/{id}/add-savings" -H "Content-Type: application/json" -d '{"amount": 1000}'
+
+# transferFunds
+curl -X POST "http://localhost:8081/api/v1/accounts/{fromId}/transfer/{toId}?amount=1000"
+
+
+# createReward
+curl -X POST "http://localhost:8081/api/v1/rewards/user/{userId}" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+
+# createUser
+curl -X POST "http://localhost:8081/api/v1/users" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+# getUserRewards
+curl -X GET "http://localhost:8081/api/v1/rewards/user/{userId}"
+
+# updateGoal
+curl -X PUT "http://localhost:8081/api/v1/goals/{id}" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+# createGoal
+curl -X POST "http://localhost:8081/api/v1/goals/user/{userId}" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+
+# getDashboardAlerts
+curl -X GET "http://localhost:8081/api/v1/dashboard/user/{userId}/alerts"
+
+# getTransaction
+curl -X GET "http://localhost:8081/api/v1/transactions/{id}"
+
+
+# updateUser
+curl -X PUT "http://localhost:8081/api/v1/users/{id}" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+# updateGoalStatus
+curl -X PUT "http://localhost:8081/api/v1/goals/{id}/status" -H "Content-Type: application/json" -d '{"field": "value"}'
+
+
+# deleteGoal
+curl -X DELETE "http://localhost:8081/api/v1/goals/{id}"
+
+# createAccount
+curl -X POST "http://localhost:8081/api/v1/accounts/user/{userId}" -H "Content-Type: application/json" -d '{"field": "value"}'

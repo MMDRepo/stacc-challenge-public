@@ -1,47 +1,70 @@
-# Welcome to the stacc challenge repository!
+# PayForJoy
 
-## Repository structure
-Every unique challenge has its own dedicated branch.
-All common resources live on the *[main](https://github.com/stacc/stacc-challenge-public)* brach.
+PayForJoy is a budgeting application built using **Java**, **Spring Boot**, **Maven**, and **SQL**. It provides a robust foundation for managing personal finances with features like account management, transaction tracking, savings goals, and gamification elements.
 
-[Have a look at the existing challenges over here](https://github.com/stacc/stacc-challenge-public/branches)
+## Features
 
---
+### Account Management
+- Create, view, update, and delete accounts.
+- Supports multiple account types (e.g., Checking, Savings).
+- Tracks account balances in real-time.
 
+### Transaction Tracking
+- Record and categorize income and expenses.
+- Supports multiple transaction types (e.g., Income, Expense).
+- Provides detailed transaction history for each account.
 
-## Get in touch!
-Feel free to use the *[issues](https://github.com/stacc/stacc-challenge-public/issues)* and *[discussion](https://github.com/stacc/stacc-challenge-public/discussions)* sections.
+### Savings Goals
+- Set financial goals with target amounts and deadlines.
+- Track progress toward achieving goals.
+- Includes active and completed goal statuses.
 
-We also have a dedicated *[discord channel](https://discord.gg/s2RyPJvBqQ)* where past and present participants can chat about anything and everything.
-The admins are also listening to this channel so feel free to reach out!
+### Dashboard
+- Provides an overview of financial status.
+- Displays charts and visualizations for better insights.
 
+### Reward System
+- Gamification elements to encourage saving.
+- Rewards for milestones like creating goals or achieving savings targets.
+- Tracks claimed and unclaimed rewards.
 
-[![Joing us on Discord](https://assets-global.website-files.com/6257adef93867e50d84d30e2/62594fddd654fc29fcc07359_cb48d2a8d4991281d7a6a95d2f58195e.svg)](https://discord.gg/s2RyPJvBqQ)
+### Error Handling
+- Comprehensive exception management for a seamless user experience.
+- Logs errors and warnings for debugging and monitoring.
 
-[If everything fails then we also have an email -> challenge@stacc.com :) ](mailto:challenge@stacc.com)
+### Logging
+- Detailed application logging using SLF4J.
+- Includes query logging for database operations (configurable).
 
---
+## Technical Details
 
-## How to deliver
+### Backend
+- **Spring Boot**: Provides the core framework for the application.
+- **H2 Database**: In-memory database for development and testing.
+- **JPA**: Manages database interactions with repositories for entities like `User`, `Account`, `Transaction`, `SavingsGoal`, and `Reward`.
 
-### Important!
-> We advise you to be concious about how your work can be assessed. Make it simple to access, run, and review. 😊 
+### Configuration
+- **Database**: Configured with H2 in-memory database (`jdbc:h2:mem:testdb`) for testing.
+- **Query Logging**: Optional query logging enabled via `payforjoy.database.enable-query-logging` property.
 
-> We can only review work that we can run, so make sure to package dependencies, include instructions, etc.
+### Sample Data Initialization
+- Automatically initializes sample data (users, accounts, transactions, goals, and rewards) if no existing data is found.
+- Includes:
+    - A demo user with pre-configured accounts.
+    - Sample transactions for income and expenses.
+    - Savings goals for emergency funds and vacations.
+    - Rewards for milestones.
 
-> If you are able to host your system in any form, please do! ([Vercel](https://vercel.com/), [Netlify](https://www.netlify.com/),
-     [Heroku](https://www.heroku.com/home) and [Github Pages](https://pages.github.com/) are some great free hosting alternatives)
+### Technologies Used
+- **Java**: Core programming language.
+- **Spring Boot**: Framework for building the application.
+- **Maven**: Dependency management and build tool.
+- **SQL**: Database interactions.
+- **JavaScript**: For frontend integration (if applicable).
 
-
-### Design/UX
-1. Somewhere where your sketch is stored. This can be a link to a Figma-, XD-, or sketch document or a set of pictures.
-2. Feel free to supplement with something that explains what you have designed, why you designed it like that and what you might have improved upon if you were to do it differently or had more time. 🕒 These can also be embedded directly into your design document if your design software supports it.
-3. [ Send it to challenge@stacc.com 📬 ](mailto:challenge@stacc.com)
-
-### Code
-1. We prefer to have your work published as a **public git repository**.
-2. If you do not want your work to be public then please contact us so that you can share it with your reviewers directly.
-3. You need to include an _readme.md_ file that details some basic information about your project.   
-[The template can be found here](https://github.com/stacc/stacc-challenge-public/blob/main/readme.md.template)
-4. We also strongly suggest that you make an assessment of how your application can be run on other systems. 
-5. [ Send it to challenge@stacc.com 📬 ](mailto:challenge@stacc.com)
+## How to Access H2 Console
+- URL: `http://localhost:8081/h2-console`
+- Ensure the following properties are set in `application.properties`:
+  ```properties
+  spring.h2.console.enabled=true
+  spring.h2.console.path=/h2-console

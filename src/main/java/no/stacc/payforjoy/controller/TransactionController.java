@@ -1,8 +1,15 @@
 package no.stacc.payforjoy.controller;
 
-import no.stacc.payforjoy.constants.ApiEndPoints;
+import no.stacc.payforjoy.enums.Currency;
+import no.stacc.payforjoy.enums.TransactionType;
+import no.stacc.payforjoy.interfaces.repository.AccountRepository;
+import no.stacc.payforjoy.interfaces.repository.TransactionRepository;
+import no.stacc.payforjoy.interfaces.repository.UserRepository;
 import no.stacc.payforjoy.interfaces.service.TransactionService;
 import no.stacc.payforjoy.model.dto.TransactionDto;
+import no.stacc.payforjoy.model.entity.Account;
+import no.stacc.payforjoy.model.entity.Transaction;
+import no.stacc.payforjoy.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +19,23 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping( "/api/v1/transactions")
+@RequestMapping("/api/v1/transactions")
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
     @Autowired
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService,
+                                 UserRepository userRepository,
+                                 AccountRepository accountRepository,
+                                 TransactionRepository transactionRepository) {
         this.transactionService = transactionService;
+        this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @GetMapping("/user/{userId}")
@@ -44,6 +60,9 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<TransactionDto> createTransaction(@Valid @RequestBody TransactionDto transactionDto) {
+        System.out.println(transactionDto);
+
+
         TransactionDto createdTransaction = transactionService.createTransaction(transactionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
     }
@@ -62,4 +81,3 @@ public class TransactionController {
         return ResponseEntity.noContent().build();
     }
 }
-

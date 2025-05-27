@@ -44,7 +44,7 @@ public class DataInitializer implements CommandLineRunner {
         Account savingsAccount = createSavingsAccount(sampleUser);
 
         // Create sample transactions
-        createSampleTransactions(checkingAccount);
+        createSampleTransactions(checkingAccount, sampleUser);
 
         // Create sample savings goals
         createSampleGoals(sampleUser);
@@ -94,7 +94,7 @@ public class DataInitializer implements CommandLineRunner {
         return savedAccount;
     }
 
-    private void createSampleTransactions(Account account) {
+    private void createSampleTransactions(Account account, User user) {
         // Sample income transaction
         Transaction salaryTransaction = new Transaction();
         salaryTransaction.setTransactionDate(LocalDateTime.now().minusDays(1));
@@ -103,19 +103,20 @@ public class DataInitializer implements CommandLineRunner {
         salaryTransaction.setTransactionType(TransactionType.INCOME);
         salaryTransaction.setCurrency(Currency.NOK);
         salaryTransaction.setAccount(account);
+        salaryTransaction.setUser(user);
         salaryTransaction.setCategory("Salary");
         transactionRepository.save(salaryTransaction);
 
         // Sample expense transactions
-        createExpenseTransaction(account, "Grocery Shopping", BigDecimal.valueOf(850.50), 2);
-        createExpenseTransaction(account, "Gas Station", BigDecimal.valueOf(650.00), 3);
-        createExpenseTransaction(account, "Restaurant", BigDecimal.valueOf(450.00), 4);
-        createExpenseTransaction(account, "Netflix Subscription", BigDecimal.valueOf(149.00), 5);
+        createExpenseTransaction(account, user, "Grocery Shopping", BigDecimal.valueOf(850.50), 2);
+        createExpenseTransaction(account, user,"Gas Station", BigDecimal.valueOf(650.00), 3);
+        createExpenseTransaction(account, user,"Restaurant", BigDecimal.valueOf(450.00), 4);
+        createExpenseTransaction(account, user,"Netflix Subscription", BigDecimal.valueOf(149.00), 5);
 
         log.debug("Created sample transactions for account: {}", account.getAccountNumber());
     }
 
-    private void createExpenseTransaction(Account account, String description, BigDecimal amount, int daysAgo) {
+    private void createExpenseTransaction(Account account, User user, String description, BigDecimal amount, int daysAgo) {
         Transaction transaction = new Transaction();
         transaction.setTransactionDate(LocalDateTime.now().minusDays(daysAgo));
         transaction.setDescription(description);
@@ -123,6 +124,7 @@ public class DataInitializer implements CommandLineRunner {
         transaction.setTransactionType(TransactionType.EXPENSE);
         transaction.setCurrency(Currency.NOK);
         transaction.setAccount(account);
+        transaction.setUser(user);
         transaction.setCategory("General");
         transactionRepository.save(transaction);
     }

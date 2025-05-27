@@ -1,5 +1,8 @@
 package no.stacc.payforjoy.service.impl;
 
+import no.stacc.payforjoy.enums.Currency;
+import no.stacc.payforjoy.enums.TransactionType;
+import no.stacc.payforjoy.interfaces.repository.UserRepository;
 import no.stacc.payforjoy.interfaces.service.TransactionService;
 import no.stacc.payforjoy.model.dto.TransactionDto;
 import no.stacc.payforjoy.model.entity.Transaction;
@@ -10,7 +13,9 @@ import no.stacc.payforjoy.exception.custom.AccountNotFoundException;
 import no.stacc.payforjoy.exception.custom.InvalidTransactionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.stacc.payforjoy.model.entity.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +33,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<TransactionDto> findAllByAccountId(Long accountId) {
@@ -36,12 +42,20 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionDto> findAllByUserId(Long userId) {
-        return List.of();
+        log.debug("Fetching transactions for user ID: {}", userId);
+        List<Transaction> transactions = transactionRepository.findByAccountUserId(userId);
+        return transactions.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<TransactionDto> findRecentByUserId(Long userId, int limit) {
-        return List.of();
+        Pageable pageable = PageRequest.of(0, limit); // Use the provided limit
+        List<Transaction> transactions = transactionRepository.findRecentTransactionsByUserId(userId, pageable);
+        return transactions.stream()
+                .map(this::convertToDto) // Convert each Transaction to TransactionDto
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -57,14 +71,17 @@ public class TransactionServiceImpl implements TransactionService {
         Account account = findAccountEntity(transactionDto.getAccountId());
         validateTransaction(transactionDto, account);
 
+        User user = findUserById(transactionDto.getUserId());
+
         // Using Lombok @Builder pattern
         Transaction transaction = Transaction.builder()
                 .transactionDate(transactionDto.getTransactionDate() != null ?
                         transactionDto.getTransactionDate() : LocalDateTime.now())
                 .description(transactionDto.getDescription())
                 .amount(transactionDto.getAmount())
-                .transactionType(transactionDto.getTransactionType())
-                .currency(transactionDto.getCurrency())
+                .user(user)
+                .transactionType(TransactionType.valueOf(transactionDto.getTransactionType()))
+                .currency(Currency.valueOf(transactionDto.getCurrency()))
                 .category(transactionDto.getCategory())
                 .account(account)
                 .build();
@@ -123,6 +140,14 @@ public class TransactionServiceImpl implements TransactionService {
                 });
     }
 
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.error("Account not found with ID: {}", userId);
+                    return new AccountNotFoundException("Account not found with ID: " + userId);
+                });
+    }
+
     private void validateTransaction(TransactionDto dto, Account account) {
         if (dto.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             log.error("Invalid transaction amount: {}", dto.getAmount());
@@ -153,8 +178,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionDate(transaction.getTransactionDate())
                 .description(transaction.getDescription())
                 .amount(transaction.getAmount())
-                .transactionType(transaction.getTransactionType())
-                .currency(transaction.getCurrency())
+                .transactionType(transaction.getTransactionType().name())
+                .currency(transaction.getCurrency().name())
                 .category(transaction.getCategory())
                 .accountId(transaction.getAccount().getId())
                 .createdAt(transaction.getCreatedAt())

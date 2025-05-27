@@ -1,6 +1,7 @@
 package no.stacc.payforjoy.interfaces.repository;
 
 import no.stacc.payforjoy.model.entity.Transaction;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t WHERE t.account.user.id = :userId ORDER BY t.transactionDate DESC")
     List<Transaction> findByUserIdOrderByTransactionDateDesc(@Param("userId") Long userId);
 
-    @Query("SELECT t FROM Transaction t WHERE t.account.user.id = :userId AND t.transactionDate >= :startDate ORDER BY t.transactionDate DESC")
-    List<Transaction> findRecentTransactionsByUserId(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate);
+    @Query("SELECT t FROM Transaction t WHERE t.account.user.id = :userId ORDER BY t.transactionDate DESC")
+    List<Transaction> findRecentTransactionsByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("SELECT t FROM Transaction t WHERE t.account.user.id = :userId")
+    List<Transaction> findByAccountUserId(@Param("userId") Long userId);
 }

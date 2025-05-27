@@ -145,7 +145,7 @@ public class DashboardRepositoryImpl implements DashboardRepository {
                 .totalGoals(((Long) result[0]).intValue())
                 .totalTargetAmount((BigDecimal) result[1])
                 .totalCurrentAmount((BigDecimal) result[2])
-                .averageProgress((BigDecimal) result[3])
+                .averageProgress(result[3] != null ? BigDecimal.valueOf((Double) result[3]) : BigDecimal.ZERO)
                 .completedGoals(((Long) result[4]).intValue())
                 .activeGoals(((Long) result[5]).intValue())
                 .build();
@@ -172,7 +172,16 @@ public class DashboardRepositoryImpl implements DashboardRepository {
                 .setParameter("startOfMonth", startOfMonth)
                 .getSingleResult();
 
-        // Get top spending categories
+        return SpendingAnalytics.builder()
+                .totalTransactions(((Long) result[0]).intValue())
+                .totalSpent(result[1] != null ? (BigDecimal) result[1] : BigDecimal.ZERO)
+                .averageTransaction(result[2] != null ? BigDecimal.valueOf(((Number) result[2]).doubleValue()) : BigDecimal.ZERO)
+                .largestTransaction(result[3] != null ? BigDecimal.valueOf(((Number) result[3]).doubleValue()) : BigDecimal.ZERO)
+                .topCategories(getTopSpendingCategories(userId, startOfMonth))
+                .build();
+    }
+
+    private List<CategorySpending> getTopSpendingCategories(Long userId, LocalDateTime startOfMonth) {
         String categoryQuery = "SELECT t.category, SUM(t.amount) " +
                 "FROM Transaction t JOIN t.account a " +
                 "WHERE a.user.id = :userId " +
@@ -188,20 +197,12 @@ public class DashboardRepositoryImpl implements DashboardRepository {
                 .setMaxResults(5)
                 .getResultList();
 
-        List<CategorySpending> topCategories = categoryResults.stream()
+        return categoryResults.stream()
                 .map(r -> CategorySpending.builder()
                         .category((String) r[0])
                         .amount((BigDecimal) r[1])
                         .build())
                 .collect(Collectors.toList());
-
-        return SpendingAnalytics.builder()
-                .totalTransactions(((Long) result[0]).intValue())
-                .totalSpent((BigDecimal) result[1])
-                .averageTransaction((BigDecimal) result[2])
-                .largestTransaction((BigDecimal) result[3])
-                .topCategories(topCategories)
-                .build();
     }
 
     @Override
@@ -380,9 +381,10 @@ public class DashboardRepositoryImpl implements DashboardRepository {
                 transaction.getTransactionDate(),
                 transaction.getDescription(),
                 transaction.getAmount(),
-                transaction.getTransactionType(),
-                transaction.getCurrency(),
+                transaction.getTransactionType().name(), // Convert enum to String
+                transaction.getCurrency().name(),       // Convert enum to String
                 transaction.getAccount().getId(),
+                transaction.getUser().getId(),
                 transaction.getAccount().getAccountNumber(),
                 transaction.getCategory(),
                 transaction.getCreatedAt()
