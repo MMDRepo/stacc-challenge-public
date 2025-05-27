@@ -1,5 +1,6 @@
 package no.stacc.payforjoy.interfaces.repository;
 
+import no.stacc.payforjoy.enums.RewardType;
 import no.stacc.payforjoy.model.entity.Reward;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,5 @@ public interface RewardRepository extends JpaRepository<Reward, Long> {
 
     @Query("SELECT SUM(r.points) FROM Reward r WHERE r.user.id = :userId")
     Integer getTotalPointsByUserId(@Param("userId") Long userId);
+    boolean existsByUserIdAndRewardType(Long userId, RewardType rewardType);
 }

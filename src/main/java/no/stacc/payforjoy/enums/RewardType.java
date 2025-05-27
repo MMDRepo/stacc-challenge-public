@@ -6,7 +6,8 @@ public enum RewardType {
     STREAK_BONUS("Streak Bonus"),
     MONTHLY_SAVER("Monthly Saver"),
     FIRST_GOAL("First Goal"),
-    BIG_SAVER("Big Saver");
+    BIG_SAVER("Big Saver"),
+    TRANSACTION_MILESTONE("Transaction Milestone");
 
     private final String displayName;
 

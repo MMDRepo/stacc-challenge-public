@@ -120,39 +120,63 @@ curl -X GET "http://localhost:8081/api/v1/accounts/1"
 # refreshDashboardData
 curl -X POST "http://localhost:8081/api/v1/dashboard/user/1/refresh"
 
-——————
-
 # checkMilestoneRewards
-curl -X GET "http://localhost:8081/api/v1/rewards/user/1/check-milestones"
-#empty response
+curl -X POST http://localhost:8081/api/v1/rewards/user/1/check-milestones \
+-H "Content-Type: application/json" \
+-d '{"userId": 1}'
 
-
-
-
-
-
-# updateAccount
-curl -X PUT "http://localhost:8081/api/v1/accounts/{id}" -H "Content-Type: application/json" -d '{"field": "value"}'
+# updateAccount type and currency
+curl -X PUT "http://localhost:8081/api/v1/accounts/1" \
+-H "Content-Type: application/json" \
+-d '{
+  "accountType": "SAVINGS",
+  "currency": "USD"
+}'
 
 # checkEmailExists
-curl -X GET "http://localhost:8081/api/v1/users/exists/email/{email}"
+curl -X GET "http://localhost:8081/api/v1/users/exists/email/demo@payforjoy.com"
+
+# getReward
+curl -X GET "http://localhost:8081/api/v1/rewards/1"
+
+# claimReward
+curl -X POST "http://localhost:8081/api/v1/rewards/1/claim"
+
+
+# createAccount
+curl -X POST "http://localhost:8081/api/v1/accounts/user/1" \
+-H "Content-Type: application/json" \
+-d '{
+  "accountType": "SAVINGS",
+  "currency": "USD",
+  "balance": 1000.00
+}'
+
+# getGoal
+curl -X GET "http://localhost:8081/api/v1/goals/1"
+
+
+——————
+
+curl -X POST "http://localhost:8081/api/v1/goals/{id}/add-savings" \
+-H "Content-Type: application/json" \
+-d '{
+  "amount": 1000
+}'
 
 
 # deleteUser
-curl -X DELETE "http://localhost:8081/api/v1/users/{id}"
+curl -X DELETE "http://localhost:8081/api/v1/users/1"
 
-# getReward
-curl -X GET "http://localhost:8081/api/v1/rewards/{id}"
 
 
 
 # deleteAccount
-curl -X DELETE "http://localhost:8081/api/v1/accounts/{id}"
+curl -X DELETE "http://localhost:8081/api/v1/accounts/1"
 
 
 
-# getGoal
-curl -X GET "http://localhost:8081/api/v1/goals/{id}"
+
 
 
 
@@ -161,10 +185,10 @@ curl -X PUT "http://localhost:8081/api/v1/transactions/{id}" -H "Content-Type: a
 
 
 # deleteTransaction
-curl -X DELETE "http://localhost:8081/api/v1/transactions/{id}"
+curl -X DELETE "http://localhost:8081/api/v1/transactions/1"
 
 # claimReward
-curl -X POST "http://localhost:8081/api/v1/rewards/{id}/claim"
+curl -X POST "http://localhost:8081/api/v1/rewards/1/claim"
 
 # addSavings
 curl -X POST "http://localhost:8081/api/v1/goals/{id}/add-savings" -H "Content-Type: application/json" -d '{"amount": 1000}'

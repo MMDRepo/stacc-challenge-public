@@ -1,6 +1,7 @@
 package no.stacc.payforjoy.interfaces.repository;
 
 import no.stacc.payforjoy.model.entity.Transaction;
+import no.stacc.payforjoy.model.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("SELECT t FROM Transaction t WHERE t.account.user.id = :userId")
     List<Transaction> findByAccountUserId(@Param("userId") Long userId);
+
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.account.user.id = :userId")
+    long countByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT t.account.user FROM Transaction t WHERE t.account.user.id = :userId")
+    User findUserById(@Param("userId") Long userId);
 }

@@ -59,7 +59,7 @@ public class RewardController {
         return ResponseEntity.ok(claimedReward);
     }
 
-    @GetMapping("/user/{userId}/check-milestones")
+    @PostMapping("/user/{userId}/check-milestones")
     public ResponseEntity<Void> checkMilestoneRewards(@PathVariable Long userId) {
         rewardService.checkAndCreateMilestoneRewards(userId);
         return ResponseEntity.ok().build();

@@ -1,7 +1,6 @@
 package no.stacc.payforjoy.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import no.stacc.payforjoy.constants.ApiEndPoints;
 import no.stacc.payforjoy.interfaces.service.UserService;
 import no.stacc.payforjoy.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
